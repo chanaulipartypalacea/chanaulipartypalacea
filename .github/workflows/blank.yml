@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Name Display</title>
+    <style>
+        #nameList {
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Names</h1>
+    <div id="nameList"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const SHEET_ID = 'YOUR_SHEET_ID';  // Replace with your Google Sheet ID
+        const API_KEY = 'YOUR_API_KEY';    // Replace with your Google Sheets API key
+        const SHEET_NAME = 'Sheet1';       // Replace with your sheet name
+
+        function fetchSheetData() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+
+            $.get(url, function(data) {
+                const rows = data.values;
+                const namesDiv = $('#nameList');
+                namesDiv.empty();
+                if (rows && rows.length > 0) {
+                    rows.forEach(row => {
+                        if (row.length > 0) {
+                            namesDiv.append(`<p>${row[0]}</p>`);  // Assuming names are in the first column
+                        }
+                    });
+                }
+            });
+        }
+
+        setInterval(fetchSheetData, 5000); // Fetch data every 5 seconds
+    </script>
+</body>
+</html>
